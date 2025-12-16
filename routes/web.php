@@ -16,8 +16,8 @@ Route::get('/sapa/{nama}', function ($nama) {
 
 });
 
-Route::get('/sapa/{nama}', function ($nama='semua') {
-    return "Halo!  selamat datang $nama di toko online";
+Route::get('/sapa/{nama?}', function ($nama='semua') {
+    return "Halo! $nama! selamat datang di toko online";
 
 });
 
