@@ -1,11 +1,16 @@
 <?php
+// app/Models/Category.php
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
-class Categori extends Model
+class Category extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'name',
         'slug',
@@ -96,5 +101,4 @@ class Categori extends Model
         }
         return asset('images/category-placeholder.png');
     }
-
 }

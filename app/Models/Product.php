@@ -1,12 +1,17 @@
 <?php
+// app/Models/Product.php
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
-   protected $fillable = [
+    use HasFactory;
+
+    protected $fillable = [
         'category_id',
         'name',
         'slug',
@@ -192,9 +197,11 @@ class Product extends Model
         });
     }
 
-     public function scopePriceRange($query, float $min, float $max)
+    /**
+     * Filter berdasarkan range harga.
+     */
+    public function scopePriceRange($query, float $min, float $max)
     {
         return $query->whereBetween('price', [$min, $max]);
     }
-
 }
