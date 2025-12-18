@@ -1,4 +1,4 @@
-{{-- resources/views/profile/edit.blade.php --}}
+
 
 @extends('layouts.app')
 
