@@ -1,11 +1,16 @@
-import { defineConfig } from "vite";
-import laravel from "laravel-vite-plugin";
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+import tailwildcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [
-    laravel({
-      input: ["resources/css/app.css", "resources/js/app.js"],
-      refresh: true, // Hot Module Replacement (HMR): Auto-refresh browser saat file .blade.php berubah
-    }),
-  ],
+    plugins: [
+        laravel({
+            input: [
+                'resources/sass/app.scss',
+                'resources/js/app.js',
+            ],
+            refresh: true,
+        }),
+        tailwildcss(),
+    ],
 });
