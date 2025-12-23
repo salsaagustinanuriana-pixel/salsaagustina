@@ -1,3 +1,8 @@
+{{-- ================================================
+     FILE: resources/views/partials/product-card.blade.php
+     FUNGSI: Komponen kartu produk yang reusable
+     ================================================ --}}
+
 <div class="card product-card h-100 border-0 shadow-sm">
     {{-- Product Image --}}
     <div class="position-relative">

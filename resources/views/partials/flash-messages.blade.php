@@ -1,4 +1,9 @@
+{{-- ================================================
+     FILE: resources/views/partials/flash-messages.blade.php
+     FUNGSI: Menampilkan notifikasi flash messages
+     ================================================ --}}
 
+{{-- Success Message --}}
 @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="bi bi-check-circle me-2"></i>
