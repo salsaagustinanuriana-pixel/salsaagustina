@@ -57,11 +57,14 @@ Route::middleware(['auth', 'admin'])
     ->name('admin.')
     ->group(function () {
 
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])
+        // Dashboard
+        Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('dashboard');
 
+        // Produk CRUD
         Route::resource('/products', AdminProductController::class);
     });
+
 
 Route::controller(GoogleController::class)->group(function () {
     Route::get('/auth/google', 'redirect')
@@ -134,9 +137,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
 });
 
+
 // ================================================
 // AUTH ROUTES (dari Laravel UI)
 // ================================================
+Auth::routes();
+ 
+
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Kategori
     Route::resource('categories', CategoryController::class)->except(['show']); // Kategori biasanya tidak butuh show detail page
@@ -145,4 +152,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('products', ProductController::class);
 });
 
-Auth::routes();
+Route::middleware('auth')->group(function() {
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+});
+
