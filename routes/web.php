@@ -157,3 +157,5 @@ Route::middleware('auth')->group(function() {
     Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 });
 
+
+
