@@ -25,7 +25,8 @@ class ProductObserver
     }
 
     /**
-     * Handle the Product "updated" event.
+     * Handle the Product "updated" event
+     .
      */
     public function updated(Product $product): void
     {

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -22,12 +23,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', 
+        'role',
         'avatar',
         'google_id',
         'phone',
         'address',
-
     ];
 
     /**
@@ -53,10 +53,7 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * User memiliki satu keranjang aktif.
-     */
-    public function cart()
+     public function cart()
     {
         return $this->hasOne(Cart::class);
     }
@@ -64,39 +61,54 @@ class User extends Authenticatable
     /**
      * User memiliki banyak item wishlist.
      */
-    public function wishlists()
-    {
-        return $this->hasMany(Wishlist::class);
-    }
+   
 
+    /**
+     * User memiliki banyak pesanan.
+     */
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
-     public function wishlistProducts()
-    {
-        return $this->belongsToMany(Product::class, 'wishlists')
-                    ->withTimestamps();
-    }
+    /**
+     * Relasi many-to-many ke products melalui wishlists.
+     */
+    // app/Models/User.php
 
-     public function isAdmin(): bool
+public function wishlists()
+{
+    // Relasi User ke Product melalui tabel wishlists
+    return $this->belongsToMany(Product::class, 'wishlists')
+                ->withTimestamps(); // Agar created_at/updated_at di pivot terisi
+}
+    // ==================== HELPER METHODS ====================
+
+    /**
+     * Cek apakah user adalah admin.
+     */
+    public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
 
-     public function isCustomer(): bool
+    /**
+     * Cek apakah user adalah customer.
+     */
+    public function isCustomer(): bool
     {
         return $this->role === 'customer';
     }
 
-    public function hasInWishlist(Product $product): bool
-    {
-        return $this->wishlists()
-                    ->where('product_id', $product->id)
-                    ->exists();
-    }
-    
+    /**
+     * Cek apakah produk ada di wishlist user.
+     */
+    // Helper untuk cek apakah user sudah wishlist produk tertentu
+public function hasInWishlist(Product $product)
+{
+    return $this->wishlists()->where('product_id', $product->id)->exists();
+}
+
     public function getAvatarUrlAttribute(): string
 {
     // Prioritas 1: Avatar yang di-upload (file fisik ada di server)
@@ -136,7 +148,6 @@ public function getInitialsAttribute(): string
 
     // Ambil maksimal 2 huruf pertama saja
     return substr($initials, 0, 2);
-
 }
 
 
