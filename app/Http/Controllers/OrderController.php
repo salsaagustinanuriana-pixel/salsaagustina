@@ -26,6 +26,16 @@ class OrderController extends Controller
         return view('orders.index', compact('orders'));
     }
 
+    public function destroy($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->delete();
+
+        return redirect()->route('orders.index')
+                        ->with('success', 'Order berhasil dihapus.');
+    }
+
+
     /**
      * Menampilkan detail satu pesanan.
      */
@@ -86,4 +96,27 @@ class OrderController extends Controller
 
         return view('orders.show', compact('order', 'snapToken'));
     }
+
+    public function success(Order $order)
+{
+    if ($order->user_id !== auth()->id()) {
+        abort(403);
+    }
+
+    // update status kalau mau
+    if ($order->status === 'pending') {
+        $order->update(['status' => 'processing']);
+    }
+
+    return view('orders.success', compact('order'));
+}
+
+public function pending(Order $order)
+{
+    if ($order->user_id !== auth()->id()) {
+        abort(403);
+    }
+
+    return view('orders.pending', compact('order'));
+}
 }
