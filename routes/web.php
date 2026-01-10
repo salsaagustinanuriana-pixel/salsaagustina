@@ -18,6 +18,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MidtransNotificationController;
+
 // ================================================
 // HALAMAN PUBLIK (Tanpa Login)
 // ================================================
@@ -132,7 +133,8 @@ Route::controller(GoogleController::class)->group(function () {
 Route::post('midtrans/notification', [MidtransNotificationController::class, 'handle'])
     ->name('midtrans.notification');
 
-   
+  ;
+
 
 
 
