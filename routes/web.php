@@ -19,6 +19,7 @@ use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MidtransNotificationController;
 
+
 // ================================================
 // HALAMAN PUBLIK (Tanpa Login)
 // ================================================
@@ -135,7 +136,15 @@ Route::post('midtrans/notification', [MidtransNotificationController::class, 'ha
 
   ;
 
+Route::get('/cart/{any}', function () {
+    return redirect()->route('cart.index');
+})->where('any', '.*');
 
 
+
+
+Route::put('/profile/avatar', [ProfileController::class, 'updateAvatar'])
+    ->middleware('auth')
+    ->name('profile.avatar.update');
 
 

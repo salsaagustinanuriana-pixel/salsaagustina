@@ -3,10 +3,6 @@
 @extends('layouts.app')
 
 @section('title', 'Detail Pesanan')
-<pre>
-APP_ENV: {{ app()->environment() }}
-TOKEN: {{ $order->snap_token ?? 'NULL' }}
-</pre>
 
 
 

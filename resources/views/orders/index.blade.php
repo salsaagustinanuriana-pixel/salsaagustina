@@ -1,131 +1,183 @@
-{{-- resources/views/orders/index.blade.php --}}
-
 @extends('layouts.app')
 
-@section('title', 'Pesanan Saya')
+@section('title', 'Daftar Pesanan - GadgetPro')
 
 @section('content')
+<style>
+    /* 1. Colors & Theme */
+    :root {
+        --gp-purple: #6366f1;
+        --gp-dark-soft: #2d3748;
+        /* Navy gelap yang lebih lembut, tidak hitam pekat */
+        --gp-soft-bg: #f8fafc;
+        --gp-border: rgba(99, 102, 241, 0.1);
+    }
+
+    body {
+        background-color: var(--gp-soft-bg);
+    }
+
+    /* 2. Card Styling */
+    .order-card {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        background: #ffffff;
+        overflow: hidden;
+    }
+
+    /* 3. TABLE HEADER - ELEGAN TAPI TIDAK TERLALU GELAP */
+    .table thead th {
+        background-color: #475569 !important;
+        /* Warna Slate (Abu-abu kebiruan tua) */
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+        color: #ffffff !important;
+        padding: 1.1rem 1rem;
+        border: none;
+    }
+
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1f5f9;
+    }
+
+    /* 4. Badges */
+    .badge-soft {
+        padding: 0.5rem 0.8rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .badge-soft-warning {
+        background-color: #fffbeb;
+        color: #92400e;
+    }
+
+    .badge-soft-info {
+        background-color: #f0f9ff;
+        color: #075985;
+    }
+
+    .badge-soft-primary {
+        background-color: #eef2ff;
+        color: #3730a3;
+    }
+
+    .badge-soft-success {
+        background-color: #f0fdf4;
+        color: #166534;
+    }
+
+    .badge-soft-danger {
+        background-color: #fef2f2;
+        color: #991b1b;
+    }
+
+    /* 5. Button Action */
+    .btn-detail {
+        border-radius: 10px;
+        padding: 0.45rem 1rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        border: 1px solid #e2e8f0;
+        color: #1e293b;
+        background: white;
+    }
+
+    .btn-detail:hover {
+        background-color: #1e293b;
+        color: #ffffff !important;
+        transform: translateY(-1px);
+    }
+
+</style>
+
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
+    {{-- Header --}}
+    <div class="mb-4">
+        <h1 class="h3 fw-bold mb-1 text-dark">Riwayat Transaksi</h1>
+        <p class="text-muted small mb-0">Lacak status dan riwayat pembelanjaan Anda</p>
+    </div>
 
-            {{-- Header Halaman --}}
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h1 class="h3 fw-bold mb-1">Pesanan Saya</h1>
-                    <p class="text-muted mb-0">Pantau status dan riwayat belanja Anda</p>
-                </div>
-                <i class="bi bi-bag-check fs-1 text-primary opacity-25"></i>
-            </div>
-
-            @if($orders->isEmpty())
-                {{-- Tampilan Jika Kosong --}}
-                <div class="card shadow-sm border-0 py-5">
-                    <div class="card-body text-center">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" alt="Empty" style="width: 120px;" class="mb-4 opacity-50">
-                        <h5 class="fw-bold">Belum Ada Pesanan</h5>
-                        <p class="text-muted">Sepertinya Anda belum melakukan pemesanan apapun.</p>
-                        <a href="{{ url('/') }}" class="btn btn-primary px-4 mt-2">Mulai Belanja</a>
-                    </div>
-                </div>
-            @else
-                {{-- List Pesanan --}}
-                @foreach($orders as $order)
-                    <div class="card shadow-sm border-0 mb-3 overflow-hidden">
-                        <div class="card-body p-0">
-                            <div class="p-4">
-                                <div class="row align-items-center">
-                                    {{-- Info Order --}}
-                                    <div class="col-md-4 mb-3 mb-md-0">
-                                        <div class="d-flex align-items-center">
-                                            <div class="bg-light p-3 rounded-3 me-3">
-                                                <i class="bi bi-receipt text-primary fs-4"></i>
-                                            </div>
-                                            <div>
-                                                <h6 class="fw-bold mb-1">#{{ $order->order_number }}</h6>
-                                                <small class="text-muted">{{ $order->created_at->format('d M Y') }}</small>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {{-- Total Harga --}}
-                                    <div class="col-6 col-md-2">
-                                        <small class="text-muted d-block">Total Tagihan</small>
-                                        <span class="fw-bold text-dark">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
-                                    </div>
-
-                                    {{-- Status Badge --}}
-                                    <div class="col-6 col-md-2">
-                                        @php
-                                            $statusClasses = [
-                                                'pending' => 'bg-warning text-dark',
-                                                'processing' => 'bg-info text-white',
-                                                'shipped' => 'bg-primary text-white',
-                                                'delivered' => 'bg-success text-white',
-                                                'cancelled' => 'bg-danger text-white',
-                                            ];
-                                            $badgeClass = $statusClasses[$order->status] ?? 'bg-secondary text-white';
-                                        @endphp
-                                        <small class="text-muted d-block mb-1">Status</small>
-                                        <span class="badge rounded-pill px-3 py-2 {{ $badgeClass }}">
-                                            {{ ucfirst($order->status) }}
-                                        </span>
-                                    </div>
-
-                                    {{-- Status Payment Badge --}}
-                                    <div class="col-6 col-md-2 mt-3 mt-md-0">
-                                        @php
-                                            $paymentStatusClasses = [
-                                                'paid' => 'bg-success text-white',
-                                                'unpaid' => 'bg-danger text-white',
-                                                'pending' => 'bg-warning text-dark',
-                                            ];
-                                            $paymentBadgeClass = $paymentStatusClasses[$order->payment_status] ?? 'bg-secondary text-white';
-                                        @endphp
-                                        <small class="text-muted d-block mb-1">Pembayaran</small>
-                                        <span class="badge rounded-pill px-3 py-2 {{ $paymentBadgeClass }}">
-                                            {{ ucfirst($order->payment_status) }}
-                                        </span>
-                                    </div>
-
-                                    {{-- Tombol Aksi --}}
-                                    <div class="col-md-2 text-md-end mt-3 mt-md-0">
-                                        <a href="{{ route('orders.show', $order) }}" class="btn btn-outline-primary btn-sm rounded-pill px-4">
-                                            Detail
-                                        </a>
-
-
-                                        </div>
-
-                                </div>
+    {{-- Order Table Card --}}
+    <div class="card order-card">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">No. Order</th>
+                        <th>Tanggal Belanja</th>
+                        <th>Status</th>
+                        <th>Total Bayar</th>
+                        <th class="text-end pe-4">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($orders as $order)
+                    <tr>
+                        <td class="ps-4">
+                            <span class="fw-bold text-dark">#{{ $order->order_number }}</span>
+                        </td>
+                        <td>
+                            <div class="text-dark fw-medium mb-0">{{ $order->created_at->translatedFormat('d M Y') }}</div>
+                            <div class="text-muted small">{{ $order->created_at->format('H:i') }} WIB</div>
+                        </td>
+                        <td>
+                            @php
+                            $statusConfig = [
+                            'pending' => ['class' => 'badge-soft-warning', 'label' => 'Menunggu', 'icon' => 'bi-wallet2'],
+                            'processing' => ['class' => 'badge-soft-info', 'label' => 'Diproses', 'icon' => 'bi-gear'],
+                            'shipped' => ['class' => 'badge-soft-primary', 'label' => 'Dikirim', 'icon' => 'bi-truck'],
+                            'delivered' => ['class' => 'badge-soft-success', 'label' => 'Selesai', 'icon' => 'bi-check2-all'],
+                            'cancelled' => ['class' => 'badge-soft-danger', 'label' => 'Batal', 'icon' => 'bi-x-circle'],
+                            ];
+                            $config = $statusConfig[$order->status] ?? ['class' => 'bg-secondary text-white', 'label' => ucfirst($order->status), 'icon' => 'bi-info-circle'];
+                            @endphp
+                            <span class="badge-soft {{ $config['class'] }}">
+                                <i class="bi {{ $config['icon'] }}"></i> {{ $config['label'] }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="fw-bold text-dark">
+                                Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                            </span>
+                        </td>
+                        <td class="text-end pe-4">
+                            <a href="{{ route('orders.show', $order) }}" class="btn btn-detail shadow-sm">
+                                <i class="bi bi-eye me-1"></i> Detail
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            <div class="text-muted py-3">
+                                <i class="bi bi-cart-x fs-1 opacity-25 d-block mb-2"></i>
+                                <span>Belum ada pesanan yang ditemukan.</span>
                             </div>
-
-                            {{-- Preview Item Terakhir (Opsional) --}}
-                            @if($order->items->count() > 0)
-                            <div class="bg-light px-4 py-2 border-top">
-                                <small class="text-muted">
-                                    <i class="bi bi-box-seam me-1"></i>
-                                    {{ $order->items->first()->product_name }}
-                                    @if($order->items->count() > 1)
-                                        <span class="fw-medium">dan {{ $order->items->count() - 1 }} produk lainnya...</span>
-                                    @endif
-                                </small>
-                            </div>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
-
-                {{-- Pagination (Jika ada) --}}
-                <div class="mt-4 d-flex justify-content-center">
-                    {{ $orders->links() }}
-                    <a href="{{ url('home') }}" class="btn btn-outline-primary shadow-sm btn-sm border btn-sm rounded-pill px-4">
-                                            <i class="bi bi-house-door"></i> Home
-                                            </a>
-                </div>
-
-            @endif
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
+
+        @if($orders->hasPages())
+        <div class="card-footer bg-white border-0 py-4 d-flex justify-content-center">
+            {{ $orders->links('pagination::bootstrap-5') }}
+        </div>
+        @endif
     </div>
 </div>
 @endsection

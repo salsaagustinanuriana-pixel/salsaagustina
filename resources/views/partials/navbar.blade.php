@@ -1,14 +1,94 @@
 {{-- ================================================
 FILE: resources/views/partials/navbar.blade.php
-FUNGSI: Navigation bar untuk customer
+FUNGSI: Navigation bar untuk customer (Pink-Abu Edition)
 ================================================ --}}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+<style>
+    .navbar-custom {
+        background-color: #ffffff;
+        /* Putih bersih */
+        border-bottom: 2px solid #fdf2f8;
+        /* Border pink sangat muda */
+    }
+
+    /* Warna Brand/Logo */
+    .navbar-custom .navbar-brand {
+        color: #f472b6 !important;
+        /* Pink Accent */
+        font-weight: 800;
+    }
+
+    /* Input Search Abu-abu */
+    .search-input-custom {
+        background-color: #f1f5f9 !important;
+        /* Abu-abu slate muda */
+        border: 1px solid #e2e8f0;
+        border-radius: 10px 0 0 10px;
+    }
+
+    .search-input-custom:focus {
+        border-color: #f472b6;
+        box-shadow: 0 0 0 0.25rem rgba(244, 114, 182, 0.1);
+    }
+
+    /* Tombol Search Pink */
+    .btn-search-custom {
+        background-color: #f472b6;
+        border-color: #f472b6;
+        color: white;
+        border-radius: 0 10px 10px 0;
+    }
+
+    .btn-search-custom:hover {
+        background-color: #db2777;
+        /* Darker pink */
+        border-color: #db2777;
+        color: white;
+    }
+
+    /* Link Navigasi Abu-abu */
+    .navbar-custom .nav-link {
+        color: #64748b !important;
+        /* Grey Slate */
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .navbar-custom .nav-link:hover {
+        color: #f472b6 !important;
+        /* Hover ke Pink */
+    }
+
+    /* Badge Notifikasi Pink */
+    .badge-pink {
+        background-color: #f472b6 !important;
+        color: white;
+    }
+
+    /* Tombol Daftar Pink */
+    .btn-register-pink {
+        background-color: #f472b6;
+        border-color: #f472b6;
+        color: white;
+        font-weight: 700;
+        border-radius: 10px;
+        padding: 6px 20px;
+    }
+
+    .btn-register-pink:hover {
+        background-color: #db2777;
+        border-color: #db2777;
+        color: white;
+    }
+
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light navbar-custom shadow-sm sticky-top">
     <div class="container">
         {{-- Logo & Brand --}}
-        <a class="navbar-brand text-primary" href="{{ route('home') }}">
+        <a class="navbar-brand" href="{{ route('home') }}">
             <i class="bi bi-bag-heart-fill me-2"></i>
-            TokoOnline
+            Snack Online Sekolah
         </a>
 
         {{-- Mobile Toggle --}}
@@ -18,13 +98,11 @@ FUNGSI: Navigation bar untuk customer
 
         {{-- Navbar Content --}}
         <div class="collapse navbar-collapse" id="navbarMain">
-            {{-- Search Form --}}
-            <form class="d-flex mx-auto" style="max-width: 400px; width: 100%;" action="{{ route('catalog.index') }}"
-                method="GET">
+            {{-- Search Form (Abu-abu & Pink) --}}
+            <form class="d-flex mx-auto" style="max-width: 400px; width: 100%;" action="{{ route('catalog.index') }}" method="GET">
                 <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Cari produk..."
-                        value="{{ request('q') }}">
-                    <button class="btn btn-outline-primary" type="submit">
+                    <input type="text" name="q" class="form-control search-input-custom" placeholder="Cari produk..." value="{{ request('q') }}">
+                    <button class="btn btn-search-custom" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
@@ -40,13 +118,12 @@ FUNGSI: Navigation bar untuk customer
                 </li>
 
                 @auth
-                {{-- Wishlist --}}
+                {{-- Wishlist (Icon Pink saat ada isi) --}}
                 <li class="nav-item">
                     <a class="nav-link position-relative" href="{{ route('wishlist.index') }}">
                         <i class="bi bi-heart"></i>
                         @if(auth()->user()->wishlists()->count() > 0)
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                            style="font-size: 0.6rem;">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-pink" style="font-size: 0.6rem;">
                             {{ auth()->user()->wishlists()->count() }}
                         </span>
                         @endif
@@ -57,12 +134,9 @@ FUNGSI: Navigation bar untuk customer
                 <li class="nav-item">
                     <a class="nav-link position-relative" href="{{ route('cart.index') }}">
                         <i class="bi bi-cart3"></i>
-                        @php
-                        $cartCount = auth()->user()->cart?->items()->count() ?? 0;
-                        @endphp
+                        @php $cartCount = auth()->user()->cart?->items()->count() ?? 0; @endphp
                         @if($cartCount > 0)
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
-                            style="font-size: 0.6rem;">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-pink" style="font-size: 0.6rem;">
                             {{ $cartCount }}
                         </span>
                         @endif
@@ -71,32 +145,18 @@ FUNGSI: Navigation bar untuk customer
 
                 {{-- User Dropdown --}}
                 <li class="nav-item dropdown ms-2">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
-                        data-bs-toggle="dropdown">
-                        <img src="{{ auth()->user()->avatar_url }}" class="rounded-circle me-2" width="32" height="32"
-                            alt="{{ auth()->user()->name }}">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" data-bs-toggle="dropdown">
+                        <img src="{{ auth()->user()->avatar_url }}" class="rounded-circle me-2" width="32" height="32" alt="{{ auth()->user()->name }}">
                         <span class="d-none d-lg-inline">{{ auth()->user()->name }}</span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                <i class="bi bi-person me-2"></i> Profil Saya
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{{ route('orders.index') }}">
-                                <i class="bi bi-bag me-2"></i> Pesanan Saya
-                            </a>
-                        </li>
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                        <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="bi bi-person me-2"></i> Profil Saya</a></li>
+                        <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-bag me-2"></i> Pesanan Saya</a></li>
                         @if(auth()->user()->isAdmin())
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li>
-                            <a class="dropdown-item text-primary" href="{{ route('admin.dashboard') }}">
-                                <i class="bi bi-speedometer2 me-2"></i> Admin Panel
-                            </a>
-                        </li>
+                        <li><a class="dropdown-item text-primary" href="{{ route('admin.dashboard') }}"><i class="bi bi-speedometer2 me-2"></i> Admin Panel</a></li>
                         @endif
                         <li>
                             <hr class="dropdown-divider">
@@ -104,22 +164,18 @@ FUNGSI: Navigation bar untuk customer
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="dropdown-item text-danger">
-                                    <i class="bi bi-box-arrow-right me-2"></i> Logout
-                                </button>
+                                <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i> Logout</button>
                             </form>
                         </li>
                     </ul>
                 </li>
                 @else
-                {{-- Guest Links --}}
+                {{-- Guest Links (Pink & Abu) --}}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('login') }}">Masuk</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-primary btn-sm ms-2" href="{{ route('register') }}">
-                        Daftar
-                    </a>
+                    <a class="btn btn-register-pink btn-sm ms-2" href="{{ route('register') }}">Register</a>
                 </li>
                 @endauth
             </ul>
